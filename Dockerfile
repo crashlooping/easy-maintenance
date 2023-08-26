@@ -1,29 +1,16 @@
-# Use the official Go image as the base image
-FROM golang:latest AS build
 
-# Set the working directory inside the container
-WORKDIR /app
+FROM golang:alpine AS builder
+WORKDIR /build
+COPY go.mod ./
+COPY go.sum ./
+COPY *.go ./
+RUN go build -o easy-maintenance-app
 
-# Copy the Go source code into the container
-COPY . .
-
-# Build the Go application
-RUN go build -o maintenance .
-
-# Create a new lightweight image for serving the application
 FROM alpine:latest
-
-# Set the working directory inside the container
+RUN apk update --no-cache && \
+    apk upgrade --no-cache
 WORKDIR /app
+COPY html html
+COPY --from=builder /build/easy-maintenance-app ./
 
-# Copy the built binary from the build stage
-COPY --from=build /app/maintenance /app/maintenance
-
-# Copy the static website content
-COPY html /app/html
-
-# Expose the port that the application listens on
-EXPOSE 8080
-
-# Command to run the application
-CMD ["/app/maintenance"]
+ENTRYPOINT ["/app/easy-maintenance-app"]
