@@ -1,10 +1,10 @@
 
-FROM golang:alpine AS builder
+FROM golang:latest AS builder
 WORKDIR /build
 COPY go.mod ./
 COPY go.sum ./
 COPY *.go ./
-RUN go build -o easy-maintenance-app
+RUN CGO_ENABLED=0 go build -o easy-maintenance-app .
 
 FROM alpine:latest
 RUN apk update --no-cache && \

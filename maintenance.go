@@ -1,20 +1,30 @@
 package main
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
+	"os"
 	"strings"
 )
 
 func processHTML(htmlPath string, replacements map[string]string) (string, error) {
-	// Read the HTML content from the file
-	content, err := ioutil.ReadFile(htmlPath)
+	// Open the HTML file
+	file, err := os.Open(htmlPath)
 	if err != nil {
 		return "", err
 	}
+	defer file.Close()
+
+	// Read the HTML content from the file
+	contentBuilder := strings.Builder{}
+	_, err = io.Copy(&contentBuilder, file)
+	if err != nil {
+		return "", err
+	}
+	content := contentBuilder.String()
 
 	// Replace the placeholders with actual values
-	modifiedContent := string(content)
+	modifiedContent := content
 	for placeholder, replacement := range replacements {
 		modifiedContent = strings.Replace(modifiedContent, placeholder, replacement, -1)
 	}
