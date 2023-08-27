@@ -17,3 +17,10 @@ CGO_ENABLED=0 go build -o easy-maintenance-app .
 docker build -t easy-maintenance-app .
 docker run --rm -p 8080:8080 easy-maintenance-app
 ```
+
+## ghcr.io
+
+```bash
+docker pull ghcr.io/crashlooping/easy-maintenance/easy-maintenance:latest
+docker run --rm -p 8080:8080 ghcr.io/crashlooping/easy-maintenance/easy-maintenance:latest
+```
