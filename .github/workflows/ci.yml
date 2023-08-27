@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    permissions: write-all
+    permissions: write-all # required to push image to ghcr
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,7 @@ jobs:
           go-version: "stable"
       - name: Run tests
         run: go test
-      - name: Run tests
+      - name: Build binary
         run: CGO_ENABLED=0 go build -o easy-maintenance-app .
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
