@@ -20,14 +20,14 @@ jobs:
           go-version: "stable"
       - name: Run tests
         run: go test
+      - name: Run tests
+        run: CGO_ENABLED=0 go build -o easy-maintenance-app .
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      # - name: Log in to GitHub Container Registry
-      #   run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build and push Docker image
         run: |
           docker build -t ghcr.io/${{ github.repository }}/easy-maintenance:latest .
