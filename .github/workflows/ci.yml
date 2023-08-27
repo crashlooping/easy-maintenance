@@ -19,5 +19,9 @@ jobs:
           go-version: "stable"
       - name: Run tests
         run: go test
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag easy-maintenance-app:$(date +%s)
+      - name: Log in to GitHub Container Registry
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Build and push Docker image
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/${{ github.repository }}/image-name:${{ github.sha }} .
+          docker push ghcr.io/${{ github.repository_owner }}/${{ github.repository }}/image-name:${{ github.sha }}
