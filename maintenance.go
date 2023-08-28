@@ -14,13 +14,6 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-type IndexResponse struct {
-	UserAgent      string `json:"userAgent"`
-	UUID           string `json:"uuid"`
-	Host           string `json:"host"`
-	BuildTimestamp string `json:"buildTimestamp"`
-}
-
 func main() {
 	e := echo.New()
 
