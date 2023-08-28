@@ -29,5 +29,5 @@ docker run --rm -p 8080:8080 ghcr.io/crashlooping/easy-maintenance/easy-maintena
 
 ```bash
 go get -u
-go mod tidy
+go mod tidy -go=1.21
 ```
