@@ -24,3 +24,10 @@ docker run --rm -p 8080:8080 easy-maintenance-app
 docker pull ghcr.io/crashlooping/easy-maintenance/easy-maintenance:latest
 docker run --rm -p 8080:8080 ghcr.io/crashlooping/easy-maintenance/easy-maintenance:latest
 ```
+
+## Go
+
+```bash
+go get -u
+go mod tidy
+```
