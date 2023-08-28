@@ -14,6 +14,12 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
+var BuildTimestamp string
+
+func init() {
+	BuildTimestamp = time.Now().Format(time.RFC3339)
+}
+
 func main() {
 	e := echo.New()
 
@@ -38,7 +44,6 @@ func getIndex(c echo.Context) error {
 	}
 	defer file.Close()
 
-	// Read the HTML content from the file
 	contentBuilder := strings.Builder{}
 	_, err = io.Copy(&contentBuilder, file)
 	if err != nil {
@@ -49,14 +54,13 @@ func getIndex(c echo.Context) error {
 	userAgent := req.Header.Get("User-Agent")
 	randomUUID, _ := uuid.NewRandom()
 	host := req.Host
-	buildTimestamp := "some-timestamp" // You need to set build timestamp in Go
 
 	// Replace placeholders in HTML content
 	modifiedContent := string(htmlContent)
 	modifiedContent = strings.Replace(modifiedContent, "{userAgent}", userAgent, -1)
 	modifiedContent = strings.Replace(modifiedContent, "{uuid}", randomUUID.String(), -1)
 	modifiedContent = strings.Replace(modifiedContent, "{host}", host, -1)
-	modifiedContent = strings.Replace(modifiedContent, "{buildTimestamp}", buildTimestamp, -1)
+	modifiedContent = strings.Replace(modifiedContent, "{buildTimestamp}", BuildTimestamp, -1)
 
 	return c.HTMLBlob(http.StatusOK, []byte(modifiedContent))
 }

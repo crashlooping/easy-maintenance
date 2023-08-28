@@ -2,7 +2,7 @@
 
 https://github.com/crashlooping/easy-maintenance
 
-A small application to provide a http endpoint for maintenance tasks.
+A small application to provide a http endpoint for maintenance tasks. Created using ChatGPT and Go 1.21.
 
 ## Build and run
 
@@ -11,7 +11,7 @@ A small application to provide a http endpoint for maintenance tasks.
 go build -o easy-maintenance-app.exe
 
 # Linux
-CGO_ENABLED=0 go build -o easy-maintenance-app .
+CGO_ENABLED=0 go build -ldflags="-X main.BuildTimestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" -o easy-maintenance-app .
 
 # Docker
 docker build -t easy-maintenance-app .
