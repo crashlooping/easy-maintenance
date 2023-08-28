@@ -1,38 +1,42 @@
 package main
 
 import (
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestHandler(t *testing.T) {
-	// Create a test server with your handler
-	testServer := httptest.NewServer(http.HandlerFunc(handler))
-	defer testServer.Close()
+func TestGetIndex(t *testing.T) {
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
 
-	// Make a request to the test server
-	response, err := http.Get(testServer.URL)
-	if err != nil {
-		t.Fatal(err)
+	if assert.NoError(t, getIndex(c)) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		// Check response body content
+		expectedContent := "Under Maintenance"
+
+		if !strings.Contains(string(rec.Body.String()), expectedContent) {
+			t.Errorf("Expected response body to contain: %s", expectedContent)
+		}
+
 	}
-	defer response.Body.Close()
+}
 
-	// Check response status code
-	if response.StatusCode != http.StatusOK {
-		t.Errorf("Expected status code %d, but got %d", http.StatusOK, response.StatusCode)
-	}
+func TestGetRemoteIP(t *testing.T) {
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/ip", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
 
-	// Read and compare the response body
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	expectedContent := "My Modified Title"
-	if !strings.Contains(string(body), expectedContent) {
-		t.Errorf("Expected response body to contain: %s", expectedContent)
+	if assert.NoError(t, getRemoteIP(c)) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Equal(t, "127.0.0.1", rec.Body.String()) // Modify this as per your expectations
 	}
 }

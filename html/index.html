@@ -1,1 +1,72 @@
-{{TITLE}} <br />{{CONTENT}}
+<html>
+<head>
+    <title>Under Maintenance</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        background-color: #f2f2f2;
+        font-family: Verdana, sans-serif;
+        text-align: center;
+        padding: 50px;
+      }
+
+      h1 {
+        font-size: 50px;
+        color: #333;
+        margin-bottom: 40px;
+      }
+
+      p {
+        font-size: 20px;
+        color: #555;
+        margin-bottom: 40px;
+      }
+
+      #timestamp {
+        font-size: 15px;
+        color: #999;
+        margin-top: 40px;
+      }
+
+      @media only screen and (max-width: 600px) {
+        body {
+          padding: 20px;
+        }
+
+        h1 {
+          font-size: 40px;
+        }
+
+        p {
+          font-size: 16px;
+        }
+
+        #timestamp {
+          font-size: 12px;
+        }
+      }
+    </style>
+</head>
+<body>
+<h1>Under Maintenance</h1>
+<p>Sorry for the inconvenience, our site is currently under maintenance.</p>
+<p>We'll be back soon!</p>
+<p>{uuid}</p>
+<p>{userAgent}</p>
+<p>{host}</p>
+<div id="timestamp">
+    <p>Date and Time: <span id="datetime"></span></p>
+</div>
+<script>
+      myTimer();
+      setInterval(myTimer, 1000);
+      function myTimer() {
+          var dt = new Date();
+          document.getElementById("datetime").innerHTML = dt.toLocaleString();
+      }
+</script>
+</body>
+</html>
+
+<!-- build at {buildTimestamp} -->
