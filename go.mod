@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.21.0
 
 require (
-	github.com/google/uuid v1.3.1
+	github.com/google/uuid v1.4.0
 	github.com/labstack/echo/v4 v4.11.2
 	github.com/stretchr/testify v1.8.4
 	gopkg.in/yaml.v3 v3.0.1 // indirect
