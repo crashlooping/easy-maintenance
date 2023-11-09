@@ -1,6 +1,6 @@
 # easy-maintenance
 
-https://github.com/crashlooping/easy-maintenance
+<https://github.com/crashlooping/easy-maintenance>
 
 A small application to provide a http endpoint for maintenance tasks. Created using ChatGPT and Go 1.21.
 
