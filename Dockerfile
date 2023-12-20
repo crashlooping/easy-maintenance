@@ -5,4 +5,6 @@ WORKDIR /app
 COPY html html
 COPY easy-maintenance-app ./
 
+EXPOSE 8080
+
 ENTRYPOINT ["/app/easy-maintenance-app"]
