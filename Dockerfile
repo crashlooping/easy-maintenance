@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3
 RUN apk update --no-cache && \
     apk upgrade --no-cache
 WORKDIR /app
