@@ -16,12 +16,9 @@ import (
 
 var BuildTimestamp string
 
-func init() {
-	BuildTimestamp = time.Now().Format(time.RFC3339)
-}
-
 func main() {
-	fmt.Println("Build time:", BuildTimestamp)
+	fmt.Printf("Build time: %s\n", BuildTimestamp)
+
 	e := echo.New()
 
 	e.Use(middleware.Logger())
