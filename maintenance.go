@@ -21,6 +21,7 @@ func init() {
 }
 
 func main() {
+	fmt.Println("Build time:", BuildTimestamp)
 	e := echo.New()
 
 	e.Use(middleware.Logger())
