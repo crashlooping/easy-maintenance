@@ -16,6 +16,8 @@ import (
 
 var BuildTimestamp string
 
+const CF_CONNECTION_ID_HEADER = "Cf-Connecting-Ip"
+
 func main() {
 	fmt.Printf("Build time: %s\n", BuildTimestamp)
 
@@ -65,6 +67,9 @@ func getIndex(c echo.Context) error {
 
 func getRemoteIP(c echo.Context) error {
 	req := c.Request()
+	if isCloudflare(req) {
+		return c.String(http.StatusOK, req.Header.Get(CF_CONNECTION_ID_HEADER))
+	}
 	xForwardedFor := req.Header.Get("X-Forwarded-For")
 	if xForwardedFor == "" {
 		return c.String(http.StatusOK, "127.0.0.1")
@@ -83,7 +88,7 @@ func getRemoteIPJSON(c echo.Context) error {
 }
 
 func getHeadersJSON(c echo.Context) error {
-	headers := getHeaders(c.Request())
+	headers := getHeaders(c.Request(), []string{})
 	jsonData, err := json.MarshalIndent(headers, "", "  ")
 	if err != nil {
 		return err
@@ -98,13 +103,14 @@ func getIPHeaders(req *http.Request) map[string]string {
 	addToMapIfPresent(headers, req, "User-Agent")
 	addToMapIfPresent(headers, req, "X-Forwarded-For")
 	addToMapIfPresent(headers, req, "X-Real-Ip")
+	addToMapIfPresent(headers, req, CF_CONNECTION_ID_HEADER)
 	return headers
 }
 
-func getHeaders(req *http.Request) map[string]string {
+func getHeaders(req *http.Request, keys []string) map[string]string {
 	headers := make(map[string]string)
-	for key, value := range req.Header {
-		headers[key] = strings.Join(value, ", ")
+	for _, key := range keys {
+		addToMapIfPresent(headers, req, key)
 	}
 	return headers
 }
@@ -114,4 +120,8 @@ func addToMapIfPresent(m map[string]string, req *http.Request, key string) {
 	if value != "" {
 		m[key] = value
 	}
+}
+
+func isCloudflare(req *http.Request) bool {
+	return req.Header.Get(CF_CONNECTION_ID_HEADER) != ""
 }
