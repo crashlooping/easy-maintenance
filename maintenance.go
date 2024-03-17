@@ -31,6 +31,8 @@ func main() {
 	e.GET("/ip/json", getRemoteIPJSON)
 	e.GET("/headers", getHeadersJSON)
 
+	e.Static("/", "static") // Serve static files
+
 	e.Logger.Fatal(e.Start(":8080"))
 }
 
