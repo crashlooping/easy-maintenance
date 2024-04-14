@@ -90,7 +90,7 @@ func getRemoteIPJSON(c echo.Context) error {
 }
 
 func getHeadersJSON(c echo.Context) error {
-	headers := getHeaders(c.Request(), []string{})
+	headers := getHeaders(c.Request())
 	jsonData, err := json.MarshalIndent(headers, "", "  ")
 	if err != nil {
 		return err
@@ -109,10 +109,10 @@ func getIPHeaders(req *http.Request) map[string]string {
 	return headers
 }
 
-func getHeaders(req *http.Request, keys []string) map[string]string {
+func getHeaders(req *http.Request) map[string]string {
 	headers := make(map[string]string)
-	for _, key := range keys {
-		addToMapIfPresent(headers, req, key)
+	for key, values := range req.Header {
+		headers[key] = strings.Join(values, ", ")
 	}
 	return headers
 }
