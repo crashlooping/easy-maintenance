@@ -44,12 +44,13 @@ func TestGetRemoteIP(t *testing.T) {
 func TestGetRemoteIPJSON(t *testing.T) {
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodGet, "/ip/json", nil)
+	req.Header.Set("X-Forwarded-For", "127.0.0.1")
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
 	if assert.NoError(t, getRemoteIPJSON(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Equal(t, rec.Body.String(), "Timestamp")
+		assert.Contains(t, rec.Body.String(), "127.0.0.1")
 	}
 }
 
