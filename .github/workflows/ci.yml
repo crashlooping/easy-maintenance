@@ -32,7 +32,7 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/crashlooping/easy-maintenance/easy-maintenance:latest
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
       - name: Build binary arm64
         run: CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags="-X main.BuildTimestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" -o easy-maintenance-app .
       - name: Build and push Docker images
@@ -41,4 +41,4 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/crashlooping/easy-maintenance/easy-maintenance:latest
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/arm64
