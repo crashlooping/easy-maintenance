@@ -18,15 +18,27 @@ jobs:
           go-version: "stable"
       - name: Run tests
         run: go test
-      - name: Build binary
-        run: CGO_ENABLED=0 go build -ldflags="-X main.BuildTimestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" -o easy-maintenance-app .
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push Docker image
-        run: |
-          docker build -t ghcr.io/${{ github.repository }}/easy-maintenance:latest .
-          docker push ghcr.io/${{ github.repository }}/easy-maintenance:latest
+      - name: Build binary
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-X main.BuildTimestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" -o easy-maintenance-app .
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/crashlooping/easy-maintenance/easy-maintenance:latest
+          platforms: linux/amd64,linux/arm64
+      - name: Build binary arm64
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags="-X main.BuildTimestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" -o easy-maintenance-app .
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/crashlooping/easy-maintenance/easy-maintenance:latest
+          platforms: linux/amd64,linux/arm64
