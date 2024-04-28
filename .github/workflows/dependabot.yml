@@ -24,3 +24,10 @@ jobs:
           CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=5 go build -ldflags="-X main.BuildTimestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" -o easy-maintenance-app-armv5 .
           CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=6 go build -ldflags="-X main.BuildTimestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" -o easy-maintenance-app-armv6 .
           CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 go build -ldflags="-X main.BuildTimestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" -o easy-maintenance-app-armv7 .
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/crashlooping/easy-maintenance/easy-maintenance:latest
+          platforms: linux/amd64,linux/arm64,linux/arm/v5,linux/arm/v6,linux/arm/v7
