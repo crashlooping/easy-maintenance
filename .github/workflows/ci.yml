@@ -38,6 +38,7 @@ jobs:
           file: ./Dockerfile
           context: .
           platforms: linux/amd64
+          provenance: false
 
   build-arm64:
     permissions: write-all # required to push image to ghcr
@@ -72,6 +73,7 @@ jobs:
           file: ./Dockerfile
           context: .
           platforms: linux/arm64
+          provenance: false
 
   link-native-to-latest:
     runs-on: ubuntu-latest
