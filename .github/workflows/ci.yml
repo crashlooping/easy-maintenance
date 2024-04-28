@@ -76,6 +76,7 @@ jobs:
           provenance: false
 
   link-native-to-latest:
+    permissions: write-all # required to push image to ghcr
     runs-on: ubuntu-latest
     needs: [build-x64, build-arm64]
     steps:
