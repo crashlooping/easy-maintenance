@@ -85,7 +85,6 @@ func getRemoteIPJSON(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(string(jsonData))
 	return c.JSONBlob(http.StatusOK, jsonData)
 }
 
@@ -95,7 +94,6 @@ func getHeadersJSON(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(string(jsonData))
 	return c.JSONBlob(http.StatusOK, jsonData)
 }
 
