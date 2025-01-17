@@ -42,7 +42,7 @@ jobs:
 
   build-arm64:
     permissions: write-all # required to push image to ghcr
-    runs-on: [self-hosted, linux, ARM64]
+    runs-on: [ubuntu-24.04-arm]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -77,7 +77,7 @@ jobs:
 
   build-arm:
     permissions: write-all # required to push image to ghcr
-    runs-on: [self-hosted, linux, ARM64]
+    runs-on: [ubuntu-24.04-arm]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
