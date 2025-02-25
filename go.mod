@@ -1,8 +1,8 @@
 module github.com/Aldjinn/easy-maintenance
 
-go 1.22
+go 1.24
 
-toolchain go1.22.2
+toolchain go1.24.0
 
 require (
 	github.com/google/uuid v1.6.0
@@ -19,7 +19,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
-	golang.org/x/crypto v0.33.0 // indirect
+	golang.org/x/crypto v0.35.0 // indirect
 	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
