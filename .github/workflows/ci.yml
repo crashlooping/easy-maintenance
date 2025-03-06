@@ -74,7 +74,7 @@ jobs:
           platforms: linux/arm64
           provenance: false
       - name: Run container
-        run: docker run --rm -d -p 8080:8080 --name easy-maintenance-app easy-maintenance-app
+        run: docker run --rm -d -p 8080:8080 --name easy-maintenance-app ghcr.io/${{ github.repository }}/easy-maintenance:latest-arm64
       - name: Test /headers endpoint
         run: |
           sleep 3 # Wait for the container to be fully up
