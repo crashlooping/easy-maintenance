@@ -157,8 +157,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Create and push manifest images
-        uses: Noelware/docker-manifest-action@master # or use a pinned version in the Releases tab
-        with:
-          inputs: ghcr.io/${{ github.repository }}/easy-maintenance:latest
-          images: ghcr.io/${{ github.repository }}/easy-maintenance:latest-arm,ghcr.io/${{ github.repository }}/easy-maintenance:latest-arm64,ghcr.io/${{ github.repository }}/easy-maintenance:latest-x64
-          push: true
+        run: |
+          export DOCKER_CLI_EXPERIMENTAL=enabled
+          docker manifest create ghcr.io/${{ github.repository }}/easy-maintenance:latest \
+            ghcr.io/${{ github.repository }}/easy-maintenance:latest-arm \
+            ghcr.io/${{ github.repository }}/easy-maintenance:latest-arm64 \
+            ghcr.io/${{ github.repository }}/easy-maintenance:latest-x64
+          docker manifest push ghcr.io/${{ github.repository }}/easy-maintenance:latest
