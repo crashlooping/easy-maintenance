@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"runtime"
 	"strings"
 	"time"
 
@@ -56,6 +57,7 @@ func getIndex(c echo.Context) error {
 	userAgent := req.Header.Get("User-Agent")
 	randomUUID, _ := uuid.NewRandom()
 	host := req.Host
+	architecture := runtime.GOARCH // Get the CPU architecture
 
 	// Replace placeholders in HTML content
 	modifiedContent := string(htmlContent)
@@ -63,6 +65,7 @@ func getIndex(c echo.Context) error {
 	modifiedContent = strings.Replace(modifiedContent, "{uuid}", randomUUID.String(), -1)
 	modifiedContent = strings.Replace(modifiedContent, "{host}", host, -1)
 	modifiedContent = strings.Replace(modifiedContent, "{buildTimestamp}", BuildTimestamp, -1)
+	modifiedContent = strings.Replace(modifiedContent, "{architecture}", architecture, -1)
 
 	return c.HTMLBlob(http.StatusOK, []byte(modifiedContent))
 }
