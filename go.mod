@@ -1,6 +1,6 @@
 module github.com/Aldjinn/easy-maintenance
 
-go 1.24
+go 1.24.0
 
 require (
 	github.com/google/uuid v1.6.0
@@ -21,5 +21,5 @@ require (
 	golang.org/x/net v0.43.0 // indirect
 	golang.org/x/sys v0.35.0 // indirect
 	golang.org/x/text v0.28.0 // indirect
-	golang.org/x/time v0.12.0 // indirect
+	golang.org/x/time v0.13.0 // indirect
 )
