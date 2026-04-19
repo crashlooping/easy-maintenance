@@ -6,75 +6,910 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#ff4fd8">
+    <meta name="msapplication-TileColor" content="#160222">
+    <meta name="theme-color" content="#12021d">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+      :root {
+        --bg-top: #22243a;
+        --bg-mid: #171829;
+        --bg-bottom: #10111b;
+        --panel: rgba(30, 24, 45, 0.88);
+        --panel-2: rgba(37, 29, 54, 0.94);
+        --line: #9a7fb8;
+        --line-soft: rgba(154, 127, 184, 0.34);
+        --cyan: #8fc9d6;
+        --pink: #a784b6;
+        --orange: #d7a46d;
+        --yellow: #d8c486;
+        --lime: #9ac5a4;
+        --text: #f4eef7;
+        --muted: #d5c6d9;
+        --muted-soft: #ab9eb8;
+        --shadow: 4px 4px 0 rgba(0, 0, 0, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        min-height: 100%;
+      }
+
       body {
-        background-color: #f2f2f2;
-        font-family: Verdana, sans-serif;
-        text-align: center;
-        padding: 50px;
+        margin: 0;
+        min-height: 100vh;
+        overflow-x: hidden;
+        color: var(--text);
+        font-family: "Courier New", "Lucida Console", monospace;
+        background:
+          radial-gradient(circle at 50% 18%, rgba(215, 164, 109, 0.16), transparent 20%),
+          linear-gradient(180deg, #2e3048 0%, var(--bg-top) 26%, var(--bg-mid) 62%, var(--bg-bottom) 100%);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.045) 0 2px, transparent 2px 5px);
+        opacity: 0.1;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        left: -12vw;
+        right: -12vw;
+        bottom: -18vh;
+        height: 48vh;
+        pointer-events: none;
+        background:
+          linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.22)),
+          repeating-linear-gradient(90deg, rgba(143, 201, 214, 0.18) 0 2px, transparent 2px 72px),
+          repeating-linear-gradient(180deg, rgba(143, 201, 214, 0.2) 0 2px, transparent 2px 52px);
+        transform: perspective(360px) rotateX(76deg);
+        transform-origin: bottom;
+        opacity: 0.2;
+      }
+
+      .frame {
+        width: min(1180px, calc(100% - 28px));
+        margin: 10px auto 16px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .sun {
+        position: absolute;
+        top: 54px;
+        right: 18px;
+        width: 150px;
+        height: 150px;
+        border: 3px solid rgba(255, 224, 102, 0.75);
+        border-radius: 50%;
+        background:
+          repeating-linear-gradient(
+            180deg,
+            rgba(216, 196, 134, 0.92) 0 10px,
+            rgba(215, 164, 109, 0.9) 10px 20px
+          );
+        box-shadow: 0 0 18px rgba(215, 164, 109, 0.18);
+        opacity: 0.82;
+      }
+
+      .sun::after {
+        content: "";
+        position: absolute;
+        inset: 56% 0 0;
+        background: rgba(18, 2, 29, 0.96);
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 12px;
+        border: 2px solid var(--pink);
+        background: rgba(34, 9, 40, 0.94);
+        background: rgba(31, 25, 43, 0.94);
+        box-shadow: var(--shadow);
+      }
+
+      .topbar-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 28px;
+        padding: 4px 10px;
+        border: 2px solid currentColor;
+        background: rgba(14, 4, 20, 0.94);
+        color: var(--cyan);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.72rem;
+        white-space: nowrap;
+      }
+
+      .chip strong {
+        color: var(--text);
+      }
+
+      .chip.alert {
+        color: var(--orange);
+      }
+
+      .chip.goal {
+        color: var(--yellow);
+      }
+
+      .chip.good {
+        color: var(--lime);
+      }
+
+      .pixel-dot {
+        width: 10px;
+        height: 10px;
+        background: currentColor;
+        box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+        flex: 0 0 auto;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.12fr 0.88fr;
+        gap: 14px;
+        margin-top: 12px;
+      }
+
+      .panel {
+        position: relative;
+        border: 2px solid var(--line);
+        background:
+          linear-gradient(180deg, rgba(44, 36, 60, 0.96), rgba(25, 21, 37, 0.98));
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 24%, transparent 76%, rgba(255, 255, 255, 0.04));
+        opacity: 0.42;
+      }
+
+      .hero-main {
+        padding: 20px;
+      }
+
+      .hero-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 10px;
+        border: 2px solid var(--yellow);
+        background: rgba(56, 21, 20, 0.48);
+        background: rgba(64, 48, 35, 0.32);
+        color: var(--yellow);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.72rem;
       }
 
       h1 {
-        font-size: 50px;
-        color: #333;
-        margin-bottom: 40px;
+        margin: 14px 0 10px;
+        font-size: clamp(2.4rem, 5.8vw, 4.3rem);
+        line-height: 0.92;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #fff6c4;
+        text-shadow:
+          3px 3px 0 rgba(167, 132, 182, 0.8),
+          6px 6px 0 rgba(0, 0, 0, 0.45);
       }
 
-      p {
-        font-size: 20px;
-        color: #555;
-        margin-bottom: 40px;
+      .hero-copy {
+        max-width: 42rem;
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.94rem;
       }
 
-      #timestamp {
-        font-size: 15px;
-        color: #999;
-        margin-top: 40px;
+      .marquee {
+        margin-top: 16px;
+        padding: 14px 16px;
+        border: 2px solid var(--cyan);
+        background:
+          linear-gradient(180deg, rgba(40, 48, 84, 0.4), rgba(18, 24, 44, 0.28)),
+          repeating-linear-gradient(90deg, rgba(143, 201, 214, 0.08) 0 2px, transparent 2px 10px);
       }
 
-      @media only screen and (max-width: 600px) {
-        body {
-          padding: 20px;
+      .marquee strong {
+        display: block;
+        color: var(--cyan);
+        font-size: clamp(1.35rem, 3vw, 2.1rem);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .marquee span {
+        display: block;
+        margin-top: 4px;
+        color: #cde3e8;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .hero-side {
+        padding: 16px;
+        display: grid;
+        gap: 10px;
+        align-content: start;
+      }
+
+      .panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .panel-title {
+        font-size: 0.98rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #fff0ff;
+      }
+
+      .panel-mini {
+        color: var(--orange);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .feed-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .feed-card {
+        padding: 12px;
+        border: 2px solid rgba(154, 127, 184, 0.38);
+        background: rgba(24, 18, 34, 0.84);
+      }
+
+      .feed-card strong {
+        display: block;
+        color: var(--cyan);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .feed-card p {
+        margin: 8px 0 10px;
+        color: var(--text);
+        font-size: 0.88rem;
+      }
+
+      .feed-card footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        color: var(--muted-soft);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .ticker {
+        margin-top: 12px;
+        overflow: hidden;
+      }
+
+      .ticker-track {
+        display: flex;
+        gap: 22px;
+        min-width: max-content;
+        padding: 10px 14px;
+        animation: ticker 26s linear infinite;
+        white-space: nowrap;
+      }
+
+      .ticker-badge {
+        padding: 3px 8px;
+        border: 2px solid var(--orange);
+        color: var(--orange);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.7rem;
+      }
+
+      .ticker-item {
+        color: #f0e8f2;
+        font-size: 0.82rem;
+      }
+
+      .ticker-item strong {
+        color: var(--yellow);
+      }
+
+      .control-row {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr 0.95fr;
+        gap: 14px;
+        margin-top: 12px;
+      }
+
+      .control-panel {
+        padding: 14px 16px;
+      }
+
+      .metric-label {
+        display: block;
+        color: var(--orange);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .metric-line {
+        margin-top: 8px;
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+      }
+
+      .metric-value {
+        font-size: clamp(1.3rem, 3vw, 1.95rem);
+        color: #fff6c4;
+        text-transform: uppercase;
+      }
+
+      .metric-subtle {
+        color: var(--muted-soft);
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .control-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 34px;
+        padding: 6px 12px;
+        border: 2px solid currentColor;
+        background: rgba(20, 16, 28, 0.88);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.7rem;
+      }
+
+      .action.main {
+        color: var(--yellow);
+      }
+
+      .action.alt {
+        color: var(--cyan);
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 14px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      .card-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .status-chip {
+        padding: 4px 8px;
+        border: 2px solid currentColor;
+        color: var(--lime);
+        background: rgba(20, 34, 26, 0.28);
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .status-chip.pending {
+        color: var(--yellow);
+        background: rgba(46, 40, 24, 0.28);
+      }
+
+      .label {
+        margin-top: 10px;
+        color: var(--orange);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .timeline {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .timeline-step {
+        padding: 10px 8px;
+        border: 2px solid rgba(154, 127, 184, 0.34);
+        background: rgba(24, 18, 34, 0.9);
+      }
+
+      .timeline-step strong {
+        display: block;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .timeline-step span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted-soft);
+        font-size: 0.68rem;
+      }
+
+      .timeline-step.complete {
+        border-color: rgba(154, 197, 164, 0.5);
+      }
+
+      .timeline-step.current {
+        border-color: rgba(143, 201, 214, 0.62);
+        box-shadow: inset 0 0 0 2px rgba(143, 201, 214, 0.12);
+      }
+
+      .bars {
+        margin-top: 12px;
+        min-height: 92px;
+        display: flex;
+        align-items: flex-end;
+        gap: 4px;
+      }
+
+      .bar {
+        flex: 1 1 0;
+        background: linear-gradient(180deg, #d8c486, #d7a46d 58%, #a784b6 100%);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .bar.off {
+        background: rgba(98, 86, 110, 0.45);
+      }
+
+      .axis {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 8px;
+        color: var(--muted-soft);
+        font-size: 0.64rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .data-stack {
+        margin-top: 10px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .data-box {
+        padding: 10px 12px;
+        border: 2px solid rgba(143, 201, 214, 0.24);
+        background: rgba(20, 17, 32, 0.86);
+      }
+
+      .data-key {
+        display: block;
+        color: var(--orange);
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .data-value {
+        display: block;
+        margin-top: 5px;
+        color: var(--text);
+        font-size: 0.82rem;
+        word-break: break-word;
+      }
+
+      .checklist {
+        margin-top: 10px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .check-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        border: 2px solid rgba(154, 127, 184, 0.28);
+        background: rgba(20, 16, 30, 0.82);
+      }
+
+      .check-name {
+        color: #fff0ff;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .check-state {
+        color: var(--lime);
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+      }
+
+      .check-state.pending {
+        color: var(--yellow);
+      }
+
+      .footer-note {
+        margin-top: 12px;
+        padding: 12px 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .footer-note p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      .footer-note strong {
+        color: #fff6c4;
+      }
+
+      .blink {
+        animation: blink 1.1s steps(2, jump-none) infinite;
+      }
+
+      @keyframes blink {
+        0%, 49% {
+          opacity: 1;
+        }
+        50%, 100% {
+          opacity: 0.5;
+        }
+      }
+
+      @keyframes ticker {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-33%);
+        }
+      }
+
+      @media (max-width: 1080px) {
+        .hero,
+        .control-row,
+        .cards {
+          grid-template-columns: 1fr;
         }
 
-        h1 {
-          font-size: 40px;
+        .feed-grid {
+          grid-template-columns: 1fr;
         }
 
-        p {
-          font-size: 16px;
+        .sun {
+          width: 110px;
+          height: 110px;
+          top: 68px;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .frame {
+          width: min(100% - 16px, 1180px);
+          margin-top: 8px;
         }
 
-        #timestamp {
-          font-size: 12px;
+        .topbar,
+        .hero-main,
+        .hero-side,
+        .control-panel,
+        .card,
+        .footer-note {
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+
+        .timeline {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .footer-note {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .sun {
+          opacity: 0.45;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .ticker-track,
+        .blink {
+          animation: none;
         }
       }
     </style>
 </head>
 <body>
-<h1>Under Maintenance</h1>
-<p>Sorry for the inconvenience, our site is currently under maintenance.</p>
-<p>We'll be back soon!</p>
-<p>{uuid}</p>
-<p>{userAgent}</p>
-<p>{host}</p>
-<div id="timestamp">
-    <p>Date and Time: <span id="datetime"></span></p>
+<div class="frame">
+    <div class="sun" aria-hidden="true"></div>
+
+    <header class="topbar">
+        <div class="topbar-group">
+            <div class="chip"><span class="pixel-dot"></span><strong>Mode</strong> Service Pause</div>
+            <div class="chip good"><span class="pixel-dot"></span><strong id="datetime">--</strong></div>
+            <div class="chip alert"><span class="pixel-dot"></span>Patch Wave Live</div>
+        </div>
+        <div class="topbar-group">
+            <div class="chip"><span class="pixel-dot"></span>{host}</div>
+            <div class="chip goal"><span class="pixel-dot"></span>Back Soon</div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="panel hero-main">
+            <div class="hero-tag"><span class="pixel-dot"></span>Arcade Service Bulletin</div>
+            <h1>Maintenance<br>Mode</h1>
+            <p class="hero-copy">
+                The cabinet is open, the tools are out, and we are tuning things up behind the screen.
+                Traffic returns as soon as the last system check clears.
+            </p>
+            <div class="marquee">
+                <strong>Level 04: Tune-Up Run</strong>
+                <span>Routing, patching, and verification are moving through the final loop</span>
+            </div>
+        </div>
+
+        <aside class="panel hero-side">
+            <div class="panel-head">
+                <strong class="panel-title">System Board</strong>
+                <span class="panel-mini">Retro diagnostics</span>
+            </div>
+            <div class="feed-grid">
+                <article class="feed-card">
+                    <strong>Boot State</strong>
+                    <p>Frontend is parked while maintenance work finishes cleanly.</p>
+                    <footer><span>Stage</span><span>Hold</span></footer>
+                </article>
+                <article class="feed-card">
+                    <strong>Player Token</strong>
+                    <p>Your visit is tagged so we can verify routing during the patch window.</p>
+                    <footer><span>Session</span><span>Tracked</span></footer>
+                </article>
+                <article class="feed-card">
+                    <strong>Health Sweep</strong>
+                    <p>Dependencies and edge checks are being validated in sequence.</p>
+                    <footer><span>Cycle</span><span class="blink">Live</span></footer>
+                </article>
+                <article class="feed-card">
+                    <strong>Reopen Gate</strong>
+                    <p>The page unlocks again when the final verification light turns green.</p>
+                    <footer><span>Next</span><span>Resume</span></footer>
+                </article>
+            </div>
+        </aside>
+    </section>
+
+    <section class="panel ticker" aria-label="Maintenance updates">
+        <div class="ticker-track">
+            <span class="ticker-badge">Broadcast</span>
+            <span class="ticker-item">Patch package loaded <strong>68%</strong></span>
+            <span class="ticker-item">Verification loop stable <strong>+47%</strong></span>
+            <span class="ticker-item">Current host checked for reopen conditions</span>
+            <span class="ticker-item">Traffic stays paused until the last pass completes</span>
+            <span class="ticker-badge">Broadcast</span>
+            <span class="ticker-item">Patch package loaded <strong>68%</strong></span>
+            <span class="ticker-item">Verification loop stable <strong>+47%</strong></span>
+            <span class="ticker-item">Current host checked for reopen conditions</span>
+            <span class="ticker-item">Traffic stays paused until the last pass completes</span>
+        </div>
+    </section>
+
+    <section class="control-row">
+        <div class="panel control-panel">
+            <span class="metric-label">Cabinet status</span>
+            <div class="metric-line">
+                <span class="metric-value">Paused</span>
+                <span class="metric-subtle">service under tune-up</span>
+            </div>
+            <div class="control-actions">
+                <span class="action main">Resume After Checks</span>
+                <span class="action alt">Watching This Request</span>
+            </div>
+        </div>
+        <div class="panel control-panel">
+            <span class="metric-label">Current machine</span>
+            <div class="metric-line">
+                <span class="metric-value">{host}</span>
+            </div>
+            <div class="label">Architecture</div>
+            <div class="metric-subtle">{architecture}</div>
+        </div>
+        <div class="panel control-panel">
+            <span class="metric-label">Local environment</span>
+            <div class="metric-line">
+                <span class="metric-value" id="timezone">Detecting</span>
+            </div>
+            <div class="label">Build timestamp</div>
+            <div class="metric-subtle">{buildTimestamp}</div>
+        </div>
+    </section>
+
+    <section class="cards">
+        <article class="panel card">
+            <div class="card-head">
+                <strong class="panel-title">Stage Map</strong>
+                <span class="status-chip">In Motion</span>
+            </div>
+            <div class="label">Current run</div>
+            <div class="timeline">
+                <div class="timeline-step complete">
+                    <strong>Load</strong>
+                    <span>Done</span>
+                </div>
+                <div class="timeline-step complete">
+                    <strong>Patch</strong>
+                    <span>Done</span>
+                </div>
+                <div class="timeline-step current">
+                    <strong>Test</strong>
+                    <span>Live</span>
+                </div>
+                <div class="timeline-step">
+                    <strong>Open</strong>
+                    <span>Next</span>
+                </div>
+            </div>
+            <div class="label">Signal bars</div>
+            <div class="bars" aria-hidden="true">
+                <div class="bar" style="height: 26%;"></div>
+                <div class="bar" style="height: 24%;"></div>
+                <div class="bar" style="height: 30%;"></div>
+                <div class="bar off" style="height: 20%;"></div>
+                <div class="bar off" style="height: 12%;"></div>
+                <div class="bar" style="height: 18%;"></div>
+                <div class="bar" style="height: 24%;"></div>
+                <div class="bar" style="height: 42%;"></div>
+                <div class="bar" style="height: 58%;"></div>
+                <div class="bar" style="height: 46%;"></div>
+                <div class="bar" style="height: 42%;"></div>
+                <div class="bar off" style="height: 9%;"></div>
+            </div>
+            <div class="axis">
+                <span>Boot</span>
+                <span>Peak</span>
+                <span>Unlock</span>
+            </div>
+        </article>
+
+        <article class="panel card">
+            <div class="card-head">
+                <strong class="panel-title">Visitor Cartridge</strong>
+                <span class="status-chip pending">Tagged</span>
+            </div>
+            <div class="data-stack">
+                <div class="data-box">
+                    <span class="data-key">Request UUID</span>
+                    <span class="data-value">{uuid}</span>
+                </div>
+                <div class="data-box">
+                    <span class="data-key">Host</span>
+                    <span class="data-value">{host}</span>
+                </div>
+                <div class="data-box">
+                    <span class="data-key">User agent</span>
+                    <span class="data-value">{userAgent}</span>
+                </div>
+                <div class="data-box">
+                    <span class="data-key">Local clock</span>
+                    <span class="data-value" id="datetime-secondary">--</span>
+                </div>
+            </div>
+        </article>
+
+        <article class="panel card">
+            <div class="card-head">
+                <strong class="panel-title">Checklist</strong>
+                <span class="status-chip">Auto</span>
+            </div>
+            <div class="checklist">
+                <div class="check-item">
+                    <span class="check-name">Static assets</span>
+                    <span class="check-state">Ready</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-name">Dependency sweep</span>
+                    <span class="check-state">Ready</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-name">Resume trigger</span>
+                    <span class="check-state pending">Pending</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-name">Post-watch</span>
+                    <span class="check-state pending">Queued</span>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section class="panel footer-note">
+        <p><strong>Thanks for waiting.</strong> This page stays tiny and fast while the main site gets its arcade-style tune-up.</p>
+        <div class="chip good"><span class="pixel-dot"></span>Continue Soon</div>
+    </section>
 </div>
 <script>
-      myTimer();
-      setInterval(myTimer, 1000);
-      function myTimer() {
+      function updateClock() {
           var dt = new Date();
-          document.getElementById("datetime").innerHTML = dt.toLocaleString();
+          var timeString = dt.toLocaleString();
+          document.getElementById("datetime").textContent = timeString;
+          document.getElementById("datetime-secondary").textContent = timeString;
       }
+
+      function updateTimezone() {
+          var zone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Unknown";
+          document.getElementById("timezone").textContent = zone;
+      }
+
+      updateClock();
+      updateTimezone();
+      setInterval(updateClock, 1000);
 </script>
 </body>
 </html>
-
 <!-- build at {buildTimestamp} -->
 <!-- architecture {architecture} -->
