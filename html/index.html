@@ -142,6 +142,19 @@
         white-space: nowrap;
       }
 
+      .chip.host-chip {
+        max-width: min(32vw, 300px);
+        white-space: normal;
+        line-height: 1.2;
+        align-items: flex-start;
+      }
+
+      .chip.host-chip .host-text {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        font-size: 0.66rem;
+      }
+
       .chip strong {
         color: var(--text);
       }
@@ -381,6 +394,14 @@
         font-size: clamp(1.3rem, 3vw, 1.95rem);
         color: #fff6c4;
         text-transform: uppercase;
+      }
+
+      .metric-value.host-value {
+        font-size: clamp(0.92rem, 1.9vw, 1.55rem);
+        line-height: 1.08;
+        text-transform: none;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       .metric-subtle {
@@ -652,6 +673,51 @@
           margin-top: 8px;
         }
 
+        .topbar {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
+        }
+
+        .topbar-group {
+          width: 100%;
+        }
+
+        .topbar-group:first-of-type {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .topbar-group:first-of-type .chip:first-child {
+          grid-column: 1 / -1;
+        }
+
+        .topbar-group:last-of-type {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+        }
+
+        .topbar-group:last-of-type .chip.goal {
+          width: auto;
+        }
+
+        .topbar-group .chip {
+          min-width: 0;
+          width: 100%;
+        }
+
+        .chip {
+          font-size: 0.68rem;
+        }
+
+        .chip.host-chip {
+          max-width: none;
+        }
+
+        .chip.host-chip .host-text {
+          font-size: 0.62rem;
+        }
+
         .topbar,
         .hero-main,
         .hero-side,
@@ -662,8 +728,79 @@
           padding-right: 12px;
         }
 
+        h1 {
+          font-size: clamp(2rem, 12vw, 3.2rem);
+          letter-spacing: 0.08em;
+          text-shadow:
+            2px 2px 0 rgba(167, 132, 182, 0.8),
+            4px 4px 0 rgba(0, 0, 0, 0.38);
+        }
+
+        .hero-copy {
+          font-size: 0.88rem;
+        }
+
+        .marquee {
+          padding: 12px;
+        }
+
+        .marquee strong {
+          font-size: 1.1rem;
+        }
+
+        .marquee span {
+          font-size: 0.72rem;
+        }
+
+        .panel-head,
+        .card-head {
+          flex-wrap: wrap;
+          align-items: flex-start;
+        }
+
+        .ticker {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .ticker-track {
+          animation: none;
+          gap: 14px;
+          padding: 10px 12px;
+        }
+
+        .metric-line {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 4px;
+        }
+
+        .metric-value.host-value {
+          font-size: 1.02rem;
+        }
+
+        .control-actions {
+          flex-direction: column;
+        }
+
+        .action {
+          width: 100%;
+        }
+
         .timeline {
           grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .bars {
+          min-height: 72px;
+        }
+
+        .axis {
+          font-size: 0.6rem;
+        }
+
+        .check-item {
+          align-items: flex-start;
         }
 
         .footer-note {
@@ -672,7 +809,7 @@
         }
 
         .sun {
-          opacity: 0.45;
+          display: none;
         }
       }
 
@@ -695,7 +832,7 @@
             <div class="chip alert"><span class="pixel-dot"></span>Patch Wave Live</div>
         </div>
         <div class="topbar-group">
-            <div class="chip"><span class="pixel-dot"></span>{host}</div>
+            <div class="chip host-chip"><span class="pixel-dot"></span><span class="host-text">{host}</span></div>
             <div class="chip goal"><span class="pixel-dot"></span>Back Soon</div>
         </div>
     </header>
@@ -774,7 +911,7 @@
         <div class="panel control-panel">
             <span class="metric-label">Current machine</span>
             <div class="metric-line">
-                <span class="metric-value">{host}</span>
+                <span class="metric-value host-value">{host}</span>
             </div>
             <div class="label">Architecture</div>
             <div class="metric-subtle">{architecture}</div>
